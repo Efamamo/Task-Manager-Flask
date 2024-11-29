@@ -1,0 +1,54 @@
+{% extends 'layout.html' %} {% block content %}
+<div class="container mt-5">
+  <h1 class="fw-bold text-center">Welcome Back!</h1>
+  <p class="text-muted text-center mb-4">
+    Log in to manage your tasks and boost your productivity.
+  </p>
+  <div class="card mx-auto shadow-sm" style="max-width: 500px">
+    <div class="card-body">
+      <h3 class="card-title text-center mb-4">Login</h3>
+      <form method="post" action="">
+        {{ form.hidden_tag() }}
+        <fieldset>
+          <div class="mb-3">
+            {{ form.username.label(class="form-label") }} {% if
+            form.username.errors %} {{ form.username(class="form-control
+            form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.username.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %} {{ form.username(class="form-control form-control-lg") }}
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.password.label(class="form-label") }} {% if
+            form.password.errors %} {{ form.password(class="form-control
+            form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.password.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %} {{ form.password(class="form-control form-control-lg") }}
+            {% endif %}
+          </div>
+
+          <div class="d-grid">
+            {{ form.submit(class="btn btn-primary btn-lg") }}
+          </div>
+        </fieldset>
+      </form>
+
+      <div class="text-center pt-3">
+        <small class="text-muted">Don't Have An Account?</small>
+        <a href="/api/v1/auth/signup" class="text-decoration-none ms-1"
+          >Signup</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
