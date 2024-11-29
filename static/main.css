@@ -1,0 +1,11 @@
+.flashed-messages {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 400px;
+  z-index: 1050;
+}
+
+.flashed-messages .alert {
+  margin-bottom: 10px;
+}

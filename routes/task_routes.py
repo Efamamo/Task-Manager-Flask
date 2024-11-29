@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template, redirect, url_for
 from services.task_service import TaskService
 from flask_jwt_extended import jwt_required
 
@@ -13,7 +13,12 @@ def add_task():
 @task_routes.route("/", methods=["GET"])
 @jwt_required()
 def get_tasks():
-    return TaskService.get_all_tasks()
+    messsage, status = TaskService.get_all_tasks()
+    if status == 200:
+        return render_template("tasks.html")
+    else:
+        return render_template('login.html')
+
 
 @task_routes.route("/<task_id>", methods=["GET"])
 @jwt_required()

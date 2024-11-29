@@ -5,8 +5,10 @@ from flask_jwt_extended import create_access_token
 class AuthService:
     @staticmethod
     def signup(username, password):
+        if not username or not password:
+            return {"message": "both username and password are required"}
         if UserModel.find_by_username(username):
-            return {"message": "User already exists"}, 400
+            return {"message": "username is taken"}, 400
 
         hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
         UserModel.create_user(username, hashed_password)
