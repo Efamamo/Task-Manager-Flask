@@ -8,8 +8,6 @@ class TaskModel:
 
     @staticmethod
     def get_all_tasks(userId):
-        print(mongo.db.tasks.find_one({"owner": {"$exists": True}}))
-        print(mongo.db.tasks.find_one({"owner": ObjectId(userId)}))
         return list(mongo.db.tasks.find({"owner": ObjectId(userId)}))
 
     @staticmethod
@@ -18,24 +16,20 @@ class TaskModel:
 
     @staticmethod
     def update_task(task_id, title, description):
-        print(description)
         return mongo.db.tasks.update_one(
             {"_id": ObjectId(task_id)},
             {"$set": {"title": title, "description": description}}
         )
     @staticmethod
     def toggle_completion(task_id):
-        
         task = mongo.db.tasks.find_one({"_id": ObjectId(task_id)})
-        tasks = list(mongo.db.tasks.find())
         if task:
             new_status = not task.get("completed", False) 
             result = mongo.db.tasks.update_one(
                 {"_id": ObjectId(task_id)},
                 {"$set": {"completed": new_status}}
             )
-            if result.modified_count > 0:
-                return tasks
+            return result.modified_count > 0
         
         return False
 

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for,flash
 from services.task_service import TaskService
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
-from forms import TasksForm
+from components.forms import TasksForm
 from wtforms.fields import Label
 from flask_jwt_extended.exceptions import  (
     NoAuthorizationError,
@@ -15,7 +15,6 @@ from flask_jwt_extended.exceptions import  (
 from functools import wraps
 
 
-
 task_routes = Blueprint("task_routes", __name__)
 
 def jwt_required_with_redirect(f):
@@ -26,22 +25,22 @@ def jwt_required_with_redirect(f):
             return f(*args, **kwargs)
         except NoAuthorizationError:
             flash("Please login to continue", "warning")
-            return redirect(url_for('auth.login'))
+            return redirect("/api/v1/auth/login")
         except InvalidHeaderError:
             flash("Invalid authentication header. Please login again.", "warning")
-            return redirect(url_for('auth.login'))
+            return redirect("/api/v1/auth/login")
         except JWTDecodeError:
             flash("Invalid token. Please login again.", "warning")
-            return redirect(url_for('auth.login'))
+            return redirect("/api/v1/auth/login")
         except WrongTokenError:
             flash("Wrong token type. Please login again.", "warning")
-            return redirect(url_for('auth.login'))
+            return redirect("/api/v1/auth/login")
         except RevokedTokenError:
             flash("Token has been revoked. Please login again.", "warning")
-            return redirect(url_for('auth.login'))
+            return redirect("/api/v1/auth/login")
         except FreshTokenRequired:
             flash("Fresh login required. Please login again.", "warning")
-            return redirect(url_for('auth.login'))
+            return redirect("/api/v1/auth/login")
       
         except Exception as e:
             flash("Authentication error. Please login again.", "warning")
@@ -71,13 +70,12 @@ def add_task():
 @jwt_required_with_redirect 
 def get_tasks():
     current_user_id = get_jwt_identity()
-    print(current_user_id)
-    tasks, status =  TaskService.get_all_tasks(current_user_id)
+    service_response, status =  TaskService.get_all_tasks(current_user_id)
 
     if status == 200:
-        return render_template('tasks.html', tasks=tasks)
+        return render_template('tasks.html', tasks=service_response)
     else:
-        flash(tasks, 'danger')
+        flash(service_response['message'], 'danger')
     
 
 
@@ -127,7 +125,7 @@ def update_task(task_id):
 
 @task_routes.route("/<task_id>/toggle")
 def toggle_task(task_id):
-    tasks, status = TaskService.toggle_task(task_id)
+    message, status = TaskService.toggle_task(task_id)
     path = request.args.get('path')
     
     if status == 200:
@@ -136,7 +134,7 @@ def toggle_task(task_id):
 
         return redirect(url_for('task_routes.get_tasks')) 
     else:
-        flash("Failed to update task", 'danger')
+        flash(message, 'danger')
         if path == 'single':
             return redirect(url_for('task_routes.get_task', task_id=task_id))
         return redirect(url_for('task_routes.get_tasks')) 

@@ -1,11 +1,12 @@
 from flask import Blueprint, request, render_template, redirect, flash, url_for,jsonify,make_response
 from services.auth_service import AuthService
-from forms import LoginForm, SignupForm
+from components.forms import LoginForm, SignupForm
 from .task_routes import task_routes
 from flask_jwt_extended import set_access_cookies,unset_access_cookies
 
 
 auth_routes = Blueprint("auth_routes", __name__)
+
 @auth_routes.route("/signup", methods=["POST", "GET"])
 def signup():
     form = SignupForm()
@@ -14,6 +15,7 @@ def signup():
             username = form.username.data
             password = form.password.data
             message, status =  AuthService.signup(username, password)
+
             if status == 201:
                 flash("User created successfully", 'success')
                 return redirect(url_for("auth_routes.login"))
@@ -30,18 +32,16 @@ def login():
             username = form.username.data
             password = form.password.data
            
-
-            message, status = AuthService.login(username, password)
-            print(message)
+            service_response, status = AuthService.login(username, password)
             
             if status == 200:
-                access_token = message["token"]
+                access_token = service_response["token"]
                  
                 response = redirect(url_for('task_routes.get_tasks'))
                 set_access_cookies(response, access_token)                
                 return response
             else:
-                flash(message["message"], 'danger')
+                flash(service_response["message"], 'danger')
     
     return render_template("login.html", form=form)
 

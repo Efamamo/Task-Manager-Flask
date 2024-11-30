@@ -16,6 +16,7 @@
 }
 
 .checkbox-placeholder {
+  padding: 4px;
   width: 16px;
   height: 16px;
   border: 2px solid #007bff;
@@ -29,7 +30,8 @@
 
 .checkbox-placeholder.checked {
   background-color: #007bff;
-  border-color: #0056b3;
+  border-color: #0f74e0;
+  padding: 6px;
 }
 .form-control::placeholder {
   font-size: 14px;

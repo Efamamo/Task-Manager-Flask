@@ -37,14 +37,10 @@ class TaskService:
     @staticmethod
     def toggle_task(task_id):
         tasks = TaskModel.toggle_completion(task_id)
-        print(tasks)
         if not tasks:
             return {"message": "Task not found"}, 404
         
-        return {"tasks" : [
-            {"id": str(task["_id"]), "title": task["title"], "description": task["description"], "completed": task['completed']}
-            for task in tasks
-        ]}, 200
+        return {"message": "Toggled Successfully"}, 200
 
     @staticmethod
     def delete_task(task_id):
