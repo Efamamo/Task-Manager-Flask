@@ -9,3 +9,34 @@
 .flashed-messages .alert {
   margin-bottom: 10px;
 }
+
+.task-toggle {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.checkbox-placeholder {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #007bff;
+  display: inline-block;
+  background-color: white;
+  border-radius: 3px;
+  margin-right: 5px;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.checkbox-placeholder.checked {
+  background-color: #007bff;
+  border-color: #0056b3;
+}
+.form-control::placeholder {
+  font-size: 14px;
+  color: #888;
+  opacity: 0.8;
+}
+
+.input-value {
+  font-size: 15px;
+}

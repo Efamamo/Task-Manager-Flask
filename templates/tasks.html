@@ -1,72 +1,95 @@
-{% extends 'layout.html' %} {% block content %}
+{% extends 'layout.html' %} {% block side %} {% include 'side.html' %} {%
+endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-lg-8 mx-auto">
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fw-bold text-primary">Task Manager</h1>
-        <a class="btn btn-success btn-sm" href="/api/v1/tasks/add"
-          >+ Add Task</a
-        >
+        <div></div>
+        <a class="btn btn-success btn-sm px-4" href="/api/v1/tasks/add">
+          + Add Task
+        </a>
       </div>
 
-      <h2>My Tasks</h2>
-      <div class="card shadow-sm">
+      <h3 class="mb-2 text-warning">Pending Tasks</h3>
+      <div class="card shadow-sm mb-4">
         <div class="card-body">
-          {% if tasks %}
+          {% set pending_tasks = tasks | selectattr('completed', 'equalto',
+          False) | list %} {% if pending_tasks %}
           <ul class="list-group">
-            {% for task in tasks %}
-            <a
-                href="/api/v1/tasks/{{task.id}}"
-                class="decoration-none"
-              >
-            <li class="d-flex justify-content-between align-items-center"></li>
-      
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="task-{{ loop.index }}"
-                    {%
-                    if
-                    task.completed
-                    %}checked{%
-                    endif
-                    %}
-                    onchange="toggleTask('{{ task.id }}', 'get_tasks', event)"
-                  />
-                  <label
-                    class="form-check-label {% if task.completed %}text-decoration-line-through text-muted{% else %}fw-bold{% endif %}"
-                    for="task-{{ loop.index }}"
-                  >
+            {% for task in pending_tasks %}
+            <li
+              onclick="window.location.href='/api/v1/tasks/{{ task.id }}'"
+              style="cursor: pointer"
+              class="list-group-item d-flex justify-content-between align-items-center border-0 shadow-sm my-2"
+            >
+              <div class="d-flex align-items-center">
+                <a
+                  href="/api/v1/tasks/{{ task.id }}/toggle"
+                  class="task-toggle me-2"
+                >
+                  <div class="checkbox-placeholder"></div>
+                </a>
+                <a
+                  href="/api/v1/tasks/{{ task.id }}"
+                  class="text-decoration-none"
+                >
+                  <label class="form-check-label mb-1 fw-bold text-dark">
                     {{ task.title }}
                   </label>
-                </div>
-                {% if task.completed %}
-                <span class="badge bg-success">Completed</span>
-                {% else %}
-                <span class="badge bg-warning">Pending</span>
-                {% endif %}
-             
-            </li>
-          </a>
+                </a>
+              </div>
 
+              <span class="badge bg-warning text-white">Pending</span>
+            </li>
             {% endfor %}
           </ul>
           {% else %}
-          <p class="text-center text-muted">
-            No tasks available. Start by adding a new task!
-          </p>
+          <p class="text-center text-muted">No pending tasks available!</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <h3 class="mb-2 text-success">Completed Tasks</h3>
+      <div class="card shadow-sm">
+        <div class="card-body">
+          {% set completed_tasks = tasks | selectattr('completed', 'equalto',
+          True) | list %} {% if completed_tasks %}
+          <ul class="list-group">
+            {% for task in completed_tasks %}
+            <li
+              onclick="window.location.href='/api/v1/tasks/{{ task.id }}'"
+              style="cursor: pointer"
+              class="list-group-item d-flex justify-content-between align-items-center border-0 shadow-sm my-2"
+            >
+              <div class="d-flex align-items-center">
+                <a
+                  href="/api/v1/tasks/{{ task.id }}/toggle"
+                  class="task-toggle me-2"
+                >
+                  <div class="checkbox-placeholder checked"></div>
+                </a>
+                <a
+                  href="/api/v1/tasks/{{ task.id }}"
+                  class="text-decoration-none"
+                >
+                  <label
+                    class="form-check-label mb-1 text-decoration-line-through text-muted"
+                  >
+                    {{ task.title }}
+                  </label>
+                </a>
+              </div>
+
+              <span class="badge bg-success text-white">Completed</span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-center text-muted">No completed tasks yet!</p>
           {% endif %}
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<script>
-  function toggleTask(taskId, path, event) {
-    event.stopPropagation(); 
-    fetch(`/api/v1/tasks/${taskId}/toggle?path=${path}`);
-  }
-</script>
 {% endblock content %}

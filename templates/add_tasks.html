@@ -1,18 +1,18 @@
-{% extends 'layout.html' %} {% block content %}
+{% extends 'layout.html' %} {% block side %} {% include 'side.html' %} {%
+endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-lg-6 mx-auto">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h3 class="card-title text-center text-primary fw-bold">
+          <h4 class="card-title text-center text-success fw-bold">
             Add New Task
-          </h3>
+          </h4>
           <form method="post" action="/api/v1/tasks/add">
-            {{ form.hidden_tag() }}
-
+            {{ form.csrf_token }}
             <div class="mb-3">
               {{ form.title.label(class="form-label fw-bold") }} {{
-              form.title(class="form-control form-control-lg",
+              form.title(class="form-control form-control-lg py-0 input-value ",
               placeholder="Enter task title") }} {% if form.title.errors %}
               <div class="text-danger">
                 {% for error in form.title.errors %}
@@ -24,7 +24,7 @@
 
             <div class="mb-3">
               {{ form.description.label(class="form-label fw-bold") }} {{
-              form.description(class="form-control", rows=4, placeholder="Enter
+              form.description(class="form-control", rows=4 , placeholder="Enter
               task description") }} {% if form.description.errors %}
               <div class="text-danger">
                 {% for error in form.description.errors %}
@@ -35,7 +35,7 @@
             </div>
 
             <div class="d-grid">
-              {{ form.submit(class="btn btn-primary btn-lg") }}
+              {{ form.submit(class="btn btn-primary btn-md") }}
             </div>
           </form>
         </div>

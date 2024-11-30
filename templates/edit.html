@@ -1,10 +1,11 @@
-{% extends 'layout.html' %} {% block content %}
+{% extends 'layout.html' %} {% block side %} {% include 'side.html' %} {%
+endblock %} {% block content %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-lg-6 mx-auto">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h3 class="card-title text-center text-primary fw-bold">Edit Task</h3>
+          <h3 class="card-title text-center text-success fw-bold">Edit Task</h3>
           <form
             method="POST"
             action="{{ url_for('task_routes.update_task', task_id=task.id) }}"
@@ -13,7 +14,7 @@
 
             <div class="mb-3">
               {{ form.title.label(class="form-label fw-bold") }} {{
-              form.title(class="form-control form-control-lg",
+              form.title(class="form-control form-control-md",
               placeholder="Enter task title") }} {% if form.title.errors %}
               <div class="text-danger">
                 {% for error in form.title.errors %}
@@ -36,7 +37,7 @@
             </div>
 
             <div class="d-grid">
-              {{ form.submit(class="btn btn-primary btn-lg") }}
+              {{ form.submit(class="btn btn-primary btn-md") }}
             </div>
           </form>
         </div>

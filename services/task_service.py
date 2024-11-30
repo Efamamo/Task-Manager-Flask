@@ -2,21 +2,21 @@ from models.task_model import TaskModel
 
 class TaskService:
     @staticmethod
-    def add_task(title, description):
-        task = TaskModel.create_task(title, description)
+    def add_task(title, description,userId):
+        task = TaskModel.create_task(title, description, userId)
         return {"message": "Task added", "task_id": str(task.inserted_id)}, 201
 
     @staticmethod
-    def get_all_tasks():
-        tasks = TaskModel.get_all_tasks()
+    def get_all_tasks(userId):
+        tasks = TaskModel.get_all_tasks(userId)
         return [
             {"id": str(task["_id"]), "title": task["title"], "description": task["description"], "completed": task['completed']}
             for task in tasks
         ], 200
 
     @staticmethod
-    def get_task(task_id):
-        task = TaskModel.get_task_by_id(task_id)
+    def get_task(task_id, user_id):
+        task = TaskModel.get_task_by_id(task_id,user_id)
         if not task:
             return {"message": "Task not found"}, 404
 
