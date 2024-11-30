@@ -15,10 +15,12 @@
           {% if tasks %}
           <ul class="list-group">
             {% for task in tasks %}
-            <a href="/api/v1/tasks/{{task.id}}" class="decoration-none"
-              ><li
-                class="list-group-item d-flex justify-content-between align-items-center"
+            <a
+                href="/api/v1/tasks/{{task.id}}"
+                class="decoration-none"
               >
+            <li class="d-flex justify-content-between align-items-center"></li>
+      
                 <div class="form-check">
                   <input
                     class="form-check-input"
@@ -30,7 +32,7 @@
                     %}checked{%
                     endif
                     %}
-                    onchange=""
+                    onchange="toggleTask('{{ task.id }}', 'get_tasks', event)"
                   />
                   <label
                     class="form-check-label {% if task.completed %}text-decoration-line-through text-muted{% else %}fw-bold{% endif %}"
@@ -44,8 +46,10 @@
                 {% else %}
                 <span class="badge bg-warning">Pending</span>
                 {% endif %}
-              </li>
-            </a>
+             
+            </li>
+          </a>
+
             {% endfor %}
           </ul>
           {% else %}
@@ -60,24 +64,9 @@
 </div>
 
 <script>
-  // JavaScript function to handle task status toggle
-  function toggleTask(taskId, isCompleted) {
-    fetch(`/tasks/${taskId}/toggle`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ completed: isCompleted }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          console.log('Task status updated.');
-        } else {
-          alert('Failed to update task status.');
-        }
-      })
-      .catch((error) => console.error('Error:', error));
+  function toggleTask(taskId, path, event) {
+    event.stopPropagation(); 
+    fetch(`/api/v1/tasks/${taskId}/toggle?path=${path}`);
   }
 </script>
 {% endblock content %}
