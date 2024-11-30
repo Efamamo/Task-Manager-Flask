@@ -14,10 +14,9 @@ def signup():
             message, status =  AuthService.signup(username, password)
             if status == 201:
                 flash("User created successfully", 'success')
-                return render_template("tasks.html", tasks=[])
+                return redirect(url_for("login"))
             else:
                 flash(message["message"], 'danger')
-
 
     return render_template("signup.html", form=form)
 

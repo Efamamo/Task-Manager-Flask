@@ -4,7 +4,7 @@ from extentions import mongo
 class TaskModel:
     @staticmethod
     def create_task(title, description):
-        return mongo.db.tasks.insert_one({"title": title, "description": description})
+        return mongo.db.tasks.insert_one({"title": title, "description": description, "completed": False})
 
     @staticmethod
     def get_all_tasks():

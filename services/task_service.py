@@ -10,7 +10,7 @@ class TaskService:
     def get_all_tasks():
         tasks = TaskModel.get_all_tasks()
         return [
-            {"id": str(task["_id"]), "title": task["title"], "description": task["description"]}
+            {"id": str(task["_id"]), "title": task["title"], "description": task["description"], "completed": task['completed']}
             for task in tasks
         ], 200
 
@@ -23,7 +23,8 @@ class TaskService:
         return {
             "id": str(task["_id"]),
             "title": task["title"],
-            "description": task["description"]
+            "description": task["description"],
+            "completed" : task["completed"]
         }, 200
 
     @staticmethod
